@@ -42,7 +42,8 @@ clean-deps:
 	curl -sfL -o ./tmp/tparse.tar.gz https://github.com/mfridman/tparse/releases/download/v0.8.3/tparse_0.8.3_Linux_x86_64.tar.gz
 	tar -xf ./tmp/tparse.tar.gz -C ./bin
 
-test-deps: ./bin/tparse ./bin/bats ./bin/golangci-lint
+test-deps: ./bin/tparse ./bin/golangci-lint
+	$(GO_BIN) get github.com/cucumber/godog@v0.11.0
 	$(GO_BIN) get -v ./...
 	$(GO_BIN) mod tidy
 
@@ -66,7 +67,7 @@ test: ./bin/tparse
 
 acceptance-test:
 	godog
-
+ 
 ci-test:
 	$(GO_BIN) test -race -coverprofile=coverage.txt -covermode=atomic ./...
 
