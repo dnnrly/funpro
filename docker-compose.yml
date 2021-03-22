@@ -1,0 +1,17 @@
+version: "3"
+services:
+  localstack:
+    image: localstack/localstack:0.12.8
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=lambda,s3,cloudwatch-logs
+  tests:
+    build:
+      context: .
+      dockerfile: features/tests.dockerfile
+    depends_on:
+      - localstack
+    volumes:
+      - .:/app
