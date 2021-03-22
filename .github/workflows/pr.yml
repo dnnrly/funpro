@@ -10,9 +10,9 @@ jobs:
         with:
           go-version: '1.16'
       - name: Build and test
-        run: make ci-test deps build acceptance-test
-        env:
-          GO111MODULE: on
+        run: make ci-test
+      - name: Acceptance test
+        run: make docker-test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         env:
