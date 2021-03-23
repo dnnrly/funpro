@@ -10,4 +10,4 @@ RUN go mod download
 
 WORKDIR /app
 
-CMD make build acceptance-test
+CMD godog -t @Integration

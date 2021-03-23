@@ -11,8 +11,8 @@ jobs:
           go-version: '1.16'
       - name: Build and test
         run: make ci-test
-      - name: Acceptance test
-        run: make docker-test
+      - name: Integration test
+        run: make integration-test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         env:
