@@ -1,4 +1,6 @@
 Feature: application help
+
+    @Acceptance
     Scenario: Help displays correctly
         Given the app runs with parameters "-help"
         Then the app exits without error

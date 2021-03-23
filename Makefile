@@ -71,7 +71,10 @@ test: ./bin/tparse
 	$(GO_BIN) test -json ./... | tparse -all
 
 acceptance-test:
-	godog
+	godog -t @Acceptance
+
+integration-test:
+	docker-compose up --build --always-recreate-deps tests
  
 ci-test:
 	$(GO_BIN) test -race -coverprofile=coverage.txt -covermode=atomic ./...
