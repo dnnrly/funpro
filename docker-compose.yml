@@ -6,11 +6,13 @@ services:
       - "4566:4566"
       - "4571:4571"
     environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
       - SERVICES=lambda,s3,cloudwatch-logs
   tests:
     build:
       context: .
-      dockerfile: features/tests.dockerfile
+      dockerfile: test.dockerfile
     depends_on:
       - localstack
     volumes:

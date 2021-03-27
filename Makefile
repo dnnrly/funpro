@@ -48,7 +48,7 @@ clean-deps:
 	cp ./tmp/godog-v0.11.0-linux-amd64/godog ./bin
 
 
-test-deps: ./bin/godog ./bin/tparse ./bin/golangci-lint
+test-deps: ./bin/godog ./bin/tparse ./bin/golangci-lint ./bin/aws
 	$(GO_BIN) get -v ./...
 	$(GO_BIN) mod tidy
 
@@ -63,6 +63,11 @@ test-deps: ./bin/godog ./bin/tparse ./bin/golangci-lint
 	gunzip -f ./tmp/goreleaser.tar.gz
 	tar -C ./bin -xvf ./tmp/goreleaser.tar
 
+./bin/aws: ./bin ./tmp
+	$(CURL_BIN) --fail -L -o ./tmp/awscli.zip  "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip"
+	unzip -d ./tmp ./tmp/awscli.zip
+	./tmp/aws/install -i $(PWD)/bin -b $(PWD)/bin
+
 build-deps: ./bin/goreleaser
 
 deps: build-deps test-deps
@@ -74,7 +79,7 @@ acceptance-test:
 	godog -t @Acceptance
 
 integration-test:
-	docker-compose up --build --always-recreate-deps tests
+	docker-compose up --build --always-recreate-deps --force-recreate --exit-code-from tests tests
  
 ci-test:
 	$(GO_BIN) test -race -coverprofile=coverage.txt -covermode=atomic ./...
