@@ -42,6 +42,8 @@ func LocalstackAvailable() error {
 				fmt.Printf("Localstack available after %s\n", time.Now().Sub(start))
 				return nil
 			}
+		} else {
+			time.Sleep(time.Second * 5)
 		}
 	}
 	return fmt.Errorf("timed out waiting for localstack")
