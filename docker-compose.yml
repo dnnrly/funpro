@@ -15,5 +15,3 @@ services:
       dockerfile: test.dockerfile
     depends_on:
       - localstack
-    volumes:
-      - .:/app
