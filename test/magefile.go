@@ -49,8 +49,21 @@ func LocalstackAvailable() error {
 	return fmt.Errorf("timed out waiting for localstack")
 }
 
+func CreateAlbResponderBucket() error {
+	mg.Deps(LocalstackAvailable)
+	fmt.Println("Creating S3 bucket")
+	return sh.RunV(
+		"aws",
+		"--endpoint-url=http://localstack:4566",
+		"s3api",
+		"create-bucket",
+		"--bucket", "alb-responder",
+		"--region", "eu-west-1",
+	)
+}
+
 func Install() error {
-	mg.Deps(ArchiveAlbResponder, LocalstackAvailable)
+	mg.Deps(ArchiveAlbResponder, CreateAlbResponderBucket)
 	fmt.Println("Installing...")
 	return sh.RunWithV(
 		map[string]string{
