@@ -21,8 +21,8 @@ export PATH := $(BASE_DIR)/bin:$(PATH)
 install:
 	$(GO_BIN) install -v .
 
-build:
-	$(GO_BIN) build -v .
+build: ./funpro
+	$(GO_BIN) build -v -o ./funpro .
 
 clean:
 	rm -f $(NAME)

@@ -9,9 +9,14 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - SERVICES=lambda,s3,cloudwatch-logs
+  funpro:
+    build:
+      context: .
+      dockerfile: Dockerfile
   tests:
     build:
       context: .
       dockerfile: test.dockerfile
     depends_on:
+      - funpro
       - localstack
