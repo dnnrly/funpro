@@ -13,10 +13,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+  alb-responder-logs:
+    build:
+      context: .
+      dockerfile: test.dockerfile
+    command: mage -d test printAlbResponderLogs
   tests:
     build:
       context: .
       dockerfile: test.dockerfile
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-1
     depends_on:
       - funpro
       - localstack
+      # - alb -responder-logs
+    volumes:
+      - .:/app

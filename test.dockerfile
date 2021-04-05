@@ -15,13 +15,12 @@ RUN apt-get update \
     && go run bootstrap.go \
     && go get github.com/cucumber/godog/cmd/godog@v0.11.0
 
-RUN mkdir /build
-WORKDIR /build
-COPY . .
+RUN mkdir /test
+WORKDIR /test
+COPY go.mod .
+COPY go.sum .
+COPY test/ . 
 
-ENV AWS_DEFAULT_REGION=eu-west-1
-ENV AWS_ACCESS_KEY_ID=test
-ENV AWS_SECRET_ACCESS_KEY=test
-
-CMD mage -d test install && \
-    godog -t @Integration
+CMD mage install \
+    && cd /app \
+    && godog -t @Integration
