@@ -53,7 +53,9 @@ func handleRequest(ctx context.Context, request events.ALBTargetGroupRequest) (e
 func main() {
 	sess := session.Must(session.NewSession())
 	s3Client = s3.New(sess, &aws.Config{
-		Region: aws.String("eu-west-1"),
+		Region:           aws.String("eu-west-1"),
+		Endpoint:         aws.String("http://localstack:4566"),
+		S3ForcePathStyle: aws.Bool(true),
 	})
 
 	lambda.Start(handleRequest)

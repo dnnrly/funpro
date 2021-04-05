@@ -32,7 +32,7 @@ func LocalstackAvailable() error {
 		Timeout: time.Second * 5,
 	}
 	start := time.Now()
-	end := start.Add(time.Second * 30)
+	end := start.Add(time.Second * 60)
 	for end.After(time.Now()) {
 		fmt.Printf("Checking localstack availability at %s\n", time.Now().Sub(start))
 		resp, err := client.Get("http://localstack:4566/health?reload")
@@ -79,4 +79,34 @@ func Install() error {
 		"--handler", "main",
 		"--runtime", "go1.x",
 	)
+}
+
+func DescribeLogs() error {
+	mg.Deps(LocalstackAvailable)
+	return sh.RunV(
+		"aws",
+		"--endpoint-url=http://localstack:4566",
+		"logs",
+		"describe-log-groups",
+	)
+}
+
+func PrintAlbResponderLogs() error {
+	mg.Deps(LocalstackAvailable)
+	for {
+		sh.RunV(
+			"aws",
+			"--endpoint-url=http://localstack:4566",
+			"logs",
+			"describe-log-groups",
+		)
+		sh.RunV(
+			"aws",
+			"--endpoint-url=http://localstack:4566",
+			"logs", "get-log-events",
+			"--log-group-name", "/aws/lambda/alb-responder",
+			"--log-stream-name", "*",
+		)
+		time.Sleep(time.Second * 1)
+	}
 }
