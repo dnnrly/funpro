@@ -76,7 +76,8 @@ func Install() error {
 		"--role", "anything",
 		"--function-name", "alb-responder",
 		"--zip-file", "fileb://alb-responder.zip",
-		"--handler", "main",
+		"--environment", "Variables={AWS_ACCESS_KEY_ID=test,AWS_SECRET_ACCESS_KEY=test,AWS_DEFAULT_REGION=eu-west-1}",
+		"--handler", "alb-responder",
 		"--runtime", "go1.x",
 	)
 }

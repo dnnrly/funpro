@@ -79,7 +79,7 @@ acceptance-test:
 	godog -t @Acceptance
 
 integration-test:
-	docker-compose up --build --always-recreate-deps --force-recreate --exit-code-from tests tests
+	docker-compose up --build --always-recreate-deps --force-recreate --exit-code-from tests
  
 ci-test:
 	$(GO_BIN) test -race -coverprofile=coverage.txt -covermode=atomic ./...
