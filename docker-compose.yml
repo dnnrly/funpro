@@ -1,12 +1,14 @@
 version: "3"
 services:
   localstack:
+    container_name: localstack
     image: localstack/localstack:0.12.8
     ports:
       - "4566:4566"
       - "4571:4571"
     environment:
       - LAMBDA_EXECUTOR=docker
+      - MAIN_CONTAINER_NAME=localstack
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
