@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/aws/aws-lambda-go v1.23.0
+	github.com/aws/aws-sdk-go v1.38.11
 	github.com/cucumber/godog v0.11.0
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

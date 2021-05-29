@@ -22,7 +22,7 @@ install:
 	$(GO_BIN) install -v .
 
 build:
-	$(GO_BIN) build -v .
+	$(GO_BIN) build -v -o ./funpro .
 
 clean:
 	rm -f $(NAME)
@@ -72,14 +72,14 @@ build-deps: ./bin/goreleaser
 
 deps: build-deps test-deps
 
-test: ./bin/tparse
+test:
 	$(GO_BIN) test -json ./... | tparse -all
 
 acceptance-test:
 	godog -t @Acceptance
 
 integration-test:
-	docker-compose up --build --always-recreate-deps --force-recreate --exit-code-from tests tests
+	docker-compose up --build --always-recreate-deps --force-recreate --exit-code-from tests
  
 ci-test:
 	$(GO_BIN) test -race -coverprofile=coverage.txt -covermode=atomic ./...

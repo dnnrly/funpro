@@ -1,19 +1,40 @@
 version: "3"
 services:
   localstack:
-    image: localstack/localstack:0.12.8
+    container_name: localstack
+    image: localstack/localstack:latest
     ports:
       - "4566:4566"
       - "4571:4571"
     environment:
+      - LAMBDA_EXECUTOR=docker
+      - MAIN_CONTAINER_NAME=localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+      - DEFAULT_REGION=eu-west-1
       - SERVICES=lambda,s3,cloudwatch-logs
+      - DEBUG=1
+    volumes:
+      - /tmp/localstack:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+  funpro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
   tests:
     build:
       context: .
-      dockerfile: test.dockerfile
+      dockerfile: test/test.dockerfile
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-1
     depends_on:
+      - funpro
       - localstack
     volumes:
       - .:/app
