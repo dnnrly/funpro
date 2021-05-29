@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -37,7 +38,9 @@ func LocalstackAvailable() error {
 		fmt.Printf("Checking localstack availability at %s\n", time.Now().Sub(start))
 		resp, err := client.Get("http://localstack:4566/health?reload")
 		if err == nil {
+			body, _ := ioutil.ReadAll(resp.Body)
 			defer resp.Body.Close()
+			fmt.Printf("Got health response %s\n", string(body))
 			if resp.StatusCode == 200 {
 				fmt.Printf("Localstack available after %s\n", time.Now().Sub(start))
 				return nil
@@ -63,7 +66,7 @@ func CreateAlbResponderBucket() error {
 }
 
 func Install() error {
-	mg.Deps(ArchiveAlbResponder, CreateAlbResponderBucket)
+	mg.Deps(LocalstackAvailable, ArchiveAlbResponder, CreateAlbResponderBucket)
 	fmt.Println("Installing...")
 	return sh.RunWithV(
 		map[string]string{
@@ -84,23 +87,21 @@ func Install() error {
 
 func DescribeLogs() error {
 	mg.Deps(LocalstackAvailable)
-	return sh.RunV(
-		"aws",
-		"--endpoint-url=http://localstack:4566",
-		"logs",
-		"describe-log-groups",
-	)
-}
-
-func PrintAlbResponderLogs() error {
-	mg.Deps(LocalstackAvailable)
-	for {
+	for i := 0; i < 20; i++ {
 		sh.RunV(
 			"aws",
 			"--endpoint-url=http://localstack:4566",
 			"logs",
 			"describe-log-groups",
 		)
+		time.Sleep(time.Second * 10)
+	}
+	return nil
+}
+
+func PrintAlbResponderLogs() error {
+	mg.Deps(LocalstackAvailable)
+	for {
 		sh.RunV(
 			"aws",
 			"--endpoint-url=http://localstack:4566",

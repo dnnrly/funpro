@@ -2,7 +2,7 @@ version: "3"
 services:
   localstack:
     container_name: localstack
-    image: localstack/localstack:0.12.8
+    image: localstack/localstack:latest
     ports:
       - "4566:4566"
       - "4571:4571"
@@ -12,6 +12,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+      - DEFAULT_REGION=eu-west-1
       - SERVICES=lambda,s3,cloudwatch-logs
       - DEBUG=1
     volumes:

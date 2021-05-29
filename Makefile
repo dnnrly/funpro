@@ -21,7 +21,7 @@ export PATH := $(BASE_DIR)/bin:$(PATH)
 install:
 	$(GO_BIN) install -v .
 
-build: ./funpro
+build:
 	$(GO_BIN) build -v -o ./funpro .
 
 clean:
@@ -72,7 +72,7 @@ build-deps: ./bin/goreleaser
 
 deps: build-deps test-deps
 
-test: ./bin/tparse
+test:
 	$(GO_BIN) test -json ./... | tparse -all
 
 acceptance-test:

@@ -21,6 +21,6 @@ COPY go.mod .
 COPY go.sum .
 COPY test/ . 
 
-CMD mage install \
+CMD mage -v install \
     && cd /app \
     && godog -t @Integration
